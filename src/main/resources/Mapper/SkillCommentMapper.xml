@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.SkillCommentMapper">
+  <resultMap id="BaseResultMap" type="entity.SkillComment">
+    <result column="commentid" jdbcType="INTEGER" property="commentid" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="skillid" jdbcType="INTEGER" property="skillid" />
+    <result column="date" jdbcType="TIMESTAMP" property="date" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+      <association property="user" column="uid" select="dao.UserDao.selectById"/>
+      <!--一对多-->
+      <collection property="reply" column="commentid" select="dao.SkillCommentMapper.selectByiscomment"/>
+  </resultMap>
+  <insert id="insert" parameterType="entity.SkillComment">
+        insert into skill_comment values(#{commentid},#{uid},#{skillid},#{date},#{content},#{iscomment})
+    </insert>
+
+  <update id="update" parameterType="entity.SkillComment">
+        update skill_comment set uid=#{uid},skillid=#{skillid},date=#{date},content=#{content}where commentid=#{commentid}
+    </update>
+
+  <delete id="delete" parameterType="Integer">
+        delete from skill_comment where commentid=#{commentid}
+    </delete>
+
+  <select id="selectById" parameterType="Integer" resultMap="BaseResultMap">
+        select * from skill_comment where skillid=#{skillid} and iscomment = 0
+    </select>
+
+    <select id="selectByiscomment"  parameterType="Integer" resultMap="BaseResultMap">
+        select * from  skill_comment where iscomment=#{commentid}
+    </select>
+
+    <select id="selectByCid"  parameterType="Integer" resultMap="BaseResultMap">
+        select * from  skill_comment where commentid=#{commentid}
+    </select>
+
+    <select id="selectAll"  resultMap="BaseResultMap">
+        select * from skill_comment
+    </select>
+</mapper>

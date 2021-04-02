@@ -1,0 +1,35 @@
+﻿<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:component-scan base-package="dao"/>
+    <!-- 1：配置数据源-->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/badminton?
+        autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf8
+        &amp;zeroDateTimeBehavior=CONVERT_TO_NULL&amp;useSSL=false&amp;serverTimezone=Asia/Shanghai"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+    </bean>
+    <!-- 2：配置sessionFactory对象-->
+    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--注入数据库连接池-->
+        <property name="dataSource" ref="dataSource"/>
+        <!--扫描sql配置文件：mapper需要的xml文件-解决500问题-->
+        <!-- 自动扫描mapping.xml文件，classpath后需要输入自己的mapper文件的路径 -->
+        <property name="mapperLocations" value="classpath:Mapper/*.xml"></property>
+        <!--扫描entity包 使用别名-->
+        <property name="typeAliasesPackage" value="entity"/>
+    </bean>
+    <!-- 3：配置扫描Dao层接口包，动态实现Dao层接口，注入到spring容器中-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--注入sessionFactory-->
+        <property name="sqlSessionFactoryBeanName" value="sessionFactory"/>
+        <!--Dao层接口包位置-->
+        <property name="basePackage" value="dao"/>
+    </bean>
+</beans>

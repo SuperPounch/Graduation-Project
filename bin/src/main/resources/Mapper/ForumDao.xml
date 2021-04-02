@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.ForumDao">
+
+    <resultMap id="forum" type="Forum">
+        <id property="forumid" column="forumid" javaType="Integer"/>
+        <result property="title" column="title" javaType="String"/>
+        <result property="source" column="source" javaType="String"/>
+        <result property="category" column="category" javaType="String"/>
+        <result property="createdate" column="createdate" javaType="Date"/>
+        <result property="text" column="text" javaType="String"/>
+    </resultMap>
+    <insert id="insert" parameterType="Forum">
+        insert into forum values(#{forumid},#{title},#{source},#{category},#{createdate},#{text})
+    </insert>
+
+    <update id="update" parameterType="Forum">
+        update forum set title=#{title},source=#{source},category=#{category},createdate=#{createdate},text=#{text}
+        where forumid=#{forumid}
+    </update>
+
+    <delete id="delete" parameterType="Integer">
+        delete from forum where  forumid=#{forumid}
+    </delete>
+
+    <select id="selectById" parameterType="Integer" resultMap="forum">
+        select * from forum where forumid=#{forumid}
+    </select>
+
+    <select id="selectByTitle" parameterType="String" resultMap="forum">
+        select * from forum where title=#{title}
+    </select>
+
+    <select id="selectByCategory" parameterType="String" resultMap="forum">
+        select * from forum where category=#{category}
+    </select>
+
+    <select id="selectAll" resultMap="forum">
+        SELECT * FROM forum
+    </select>
+
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.NewsCommentMapper">
+    <resultMap id="BaseResultMap" type="entity.NewsComment">
+        <result column="commentid" jdbcType="INTEGER" property="commentid"/>
+        <result column="newsid" jdbcType="INTEGER" property="newsid"/>
+        <result column="uid" jdbcType="INTEGER" property="uid"/>
+        <result column="iscomment" jdbcType="INTEGER" property="iscomment"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="date" jdbcType="TIMESTAMP" property="date"/>
+        <!--一对一，通过uid搜索对应user-->
+        <association property="user" column="uid" select="dao.UserDao.selectById"/>
+        <!--一对多-->
+        <collection property="reply" column="commentid" select="dao.NewsCommentMapper.selectByiscomment"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="entity.NewsComment" useGeneratedKeys="true" keyProperty="commentid">
+        insert into news_comment values(#{commentid},#{uid},#{newsid},#{content},#{date},#{iscomment})
+    </insert>
+
+    <update id="update" parameterType="entity.NewsComment">
+        update news_comment set uid=#{uid},newsid=#{newsid},date=#{date},content=#{content}where commentid=#{commentid}
+    </update>
+
+    <delete id="delete" parameterType="Integer">
+        delete from news_comment where commentid=#{commentid}
+    </delete>
+
+    <select id="selectById" parameterType="Integer" resultMap="BaseResultMap">
+        select * from news_comment where newsid=#{newsid} and iscomment=0
+    </select>
+
+    <select id="selectByiscomment"  parameterType="Integer" resultMap="BaseResultMap">
+        select * from  news_comment where iscomment=#{commentid}
+    </select>
+
+    <select id="selectByCid"  parameterType="Integer" resultMap="BaseResultMap">
+        select * from  news_comment where commentid=#{commentid}
+    </select>
+
+    <select id="selectAll"  resultMap="BaseResultMap">
+        select * from news_comment
+    </select>
+</mapper>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.EquipmentDao">
+
+    <resultMap id="equipment" type="Equipment">
+        <id property="equid" column="equid" javaType="Integer"/>
+        <result property="equname" column="equname" javaType="String"/>
+        <result property="price" column="price" javaType="Integer"/>
+        <result property="brand" column="brand" javaType="String"/>
+        <result property="series" column="series" javaType="String"/>
+        <result property="category" column="category" javaType="String"/>
+        <result property="introduction" column="introduction" javaType="String"/>
+        <result property="img" column="img" javaType="String" />
+        <collection property="commentList" column="equid" ofType="entity.EquComment" select="dao.EquCommentMapper.selectById"/>
+    </resultMap>
+    <insert id="insert" parameterType="Equipment">
+        insert into equipment values(#{equid},#{equname},#{price},#{brand},#{series},#{category},#{introduction},#{img})
+    </insert>
+
+    <update id="update" parameterType="Equipment">
+        update equipment set equname=#{equname},price=#{price},brand=#{brand},
+        series=#{series},category=#{category},introduction=#{introduction}
+        where equid=#{equid}
+    </update>
+
+    <delete id="delete" parameterType="Integer">
+        delete from equipment where equid=#{equid}
+    </delete>
+
+    <select id="selectById" parameterType="Integer" resultMap="equipment">
+        select * from equipment where equid=#{equid}
+    </select>
+
+    <select id="selectByName" parameterType="String" resultMap="equipment">
+        select * from equipment where equname=#{equname}
+    </select>
+
+    <select id="selectByCategory" parameterType="String" resultMap="equipment">
+        select * from equipment where category=#{category}
+    </select>
+
+    <select id="selectAll" resultMap="equipment">
+        SELECT * FROM equipment
+    </select>
+
+</mapper>
