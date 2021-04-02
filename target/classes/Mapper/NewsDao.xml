@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.NewsDao">
+
+    <resultMap id="news" type="News">
+        <id property="newsid" column="newsid" javaType="Integer"/>
+        <result property="title" column="title" javaType="String"/>
+        <result property="source" column="source" javaType="String"/>
+        <result property="category" column="category" javaType="String"/>
+        <result property="createdate" column="createdate" javaType="Date"/>
+        <result property="text" column="text" javaType="String"/>
+        <collection property="commentList" column="newsid" ofType="entity.NewsComment"
+                    select="dao.NewsCommentMapper.selectById"/>
+    </resultMap>
+    <insert id="insert" parameterType="News">
+        insert into news values(#{newsid},#{title},#{source},#{category},#{createdate},#{text})
+    </insert>
+
+    <update id="update" parameterType="News">
+        update news set title=#{title},source=#{source},category=#{category},createdate=#{createdate},text=#{text}
+        where newsid=#{newsid}
+    </update>
+
+    <delete id="delete" parameterType="Integer">
+        delete from news where  newsid=#{newsid}
+    </delete>
+
+    <select id="selectById" parameterType="Integer" resultMap="news">
+        select * from news where newsid=#{newsid}
+    </select>
+<!--    -->
+    <select id="selectByTitle" parameterType="String" resultMap="news">
+        select * from news where createdate LIKE CONCAT ('%',#{key},'%')
+    </select>
+
+    <select id="selectByCategory" parameterType="String" resultMap="news">
+        select * from news where category=#{category}
+    </select>
+
+    <select id="selectAll" resultMap="news">
+        SELECT * FROM news
+    </select>
+
+</mapper>

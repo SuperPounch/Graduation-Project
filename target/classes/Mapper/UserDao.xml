@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.UserDao">
+
+    <resultMap id="user" type="User">
+        <id property="uid" column="uid" javaType="Integer"/>
+        <result property="level" column="level" javaType="Integer"/>
+        <result property="username" column="username" javaType="String"/>
+        <result property="password" column="password" javaType="String"/>
+        <result property="age" column="age" javaType="Integer"/>
+        <result property="phone" column="phone" javaType="String"/>
+        <result property="mail" column="mail" javaType="String"/>
+        <result property="sex" column="sex" javaType="String"/>
+        <result property="birthday" column="birthday" javaType="Date"/>
+        <result property="want" column="want" javaType="String"/>
+    </resultMap>
+<!--    (username,password) values (#{username},#{password})-->
+
+    <insert id="insert" parameterType="User" useGeneratedKeys="true">
+        insert into user (username,password,age,birthday,level,phone,mail,want,sex)
+    values(#{username},#{password},#{age},#{birthday},#{level},#{phone},#{mail},#{want},#{sex})
+    </insert>
+    <delete id="delete" parameterType="Integer">
+        delete from user where uid=#{uid}
+    </delete>
+    <update id="update" parameterType="User">
+        update user set username=#{username},age=#{age},birthday=#{birthday},password=#{password},level=#{level},phone=#{phone},mail=#{mail},want=#{want},sex=#{sex} where uid=#{uid}
+    </update>
+    <select id="selectById" parameterType="Integer" resultMap="user">
+        select * from user where uid=#{uid}
+    </select>
+    <select id="selectByUserName" parameterType="String" resultMap="user">
+        select * from user where username=#{username}
+    </select>
+    <select id="selectAll" resultMap="user">
+        select * from user
+    </select>
+</mapper>

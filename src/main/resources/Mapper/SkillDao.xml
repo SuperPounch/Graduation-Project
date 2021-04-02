@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.SkillDao">
+
+    <resultMap id="skill" type="Skill">
+        <id property="skillid" column="skillid" javaType="Integer"/>
+        <result property="title" column="title" javaType="String"/>
+        <result property="source" column="source" javaType="String"/>
+        <result property="category" column="category" javaType="String"/>
+        <result property="createdate" column="createdate" javaType="Date"/>
+        <result property="text" column="text" javaType="String"/>
+        <collection property="commentList" column="skillid" ofType="entity.SkillComment" select="dao.SkillCommentMapper.selectById"/>
+    </resultMap>
+    <insert id="insert" parameterType="Skill">
+        insert into skill values(#{skillid},#{title},#{source},#{category},#{createdate},#{text})
+    </insert>
+
+    <update id="update" parameterType="Skill">
+        update skill set title=#{title},source=#{source},category=#{category},createdate=#{createdate},text=#{text}
+        where skillid=#{skillid}
+    </update>
+
+    <delete id="delete" parameterType="Integer">
+        delete from skill where  skillid=#{skillid}
+    </delete>
+
+    <select id="selectById" parameterType="Integer" resultMap="skill">
+        select * from skill where skillid=#{skillid}
+    </select>
+
+    <select id="selectByTitle" parameterType="String" resultMap="skill">
+        select * from skill where title=#{title}
+    </select>
+
+    <select id="selectByCategory" parameterType="String" resultMap="skill">
+        select * from skill where category=#{category}
+    </select>
+
+    <select id="selectAll" resultMap="skill">
+        SELECT * FROM skill
+    </select>
+
+</mapper>

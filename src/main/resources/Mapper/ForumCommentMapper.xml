@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.ForumCommentMapper">
+  <resultMap id="BaseResultMap" type="entity.ForumComment">
+    <result column="commentid" jdbcType="INTEGER" property="commentid" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="forumid" jdbcType="INTEGER" property="forumid" />
+    <result column="date" jdbcType="TIMESTAMP" property="date" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+      <association property="user" column="uid" select="dao.UserDao.selectById"/>
+      <!--一对多-->
+      <collection property="reply" column="commentid" select="dao.ForumCommentMapper.selectByiscomment"/>
+  </resultMap>
+
+  <insert id="insert" parameterType="entity.ForumComment" useGeneratedKeys="true" keyProperty="commentid">
+        insert into forum_comment values(#{commentid},#{uid},#{forumid},#{date},#{content},#{iscomment})
+    </insert>
+
+  <update id="update" parameterType="entity.ForumComment">
+        update forum_comment set uid=#{uid},forumid=#{forumid},date=#{date},content=#{content}where commentid=#{commentid}
+    </update>
+
+  <delete id="delete" parameterType="Integer">
+        delete from forum_comment where commentid=#{commentid}
+    </delete>
+
+  <select id="selectById" parameterType="Integer" resultMap="BaseResultMap">
+        select * from forum_comment where forumid=#{forumid} and iscomment=0
+    </select>
+
+    <select id="selectByiscomment"  parameterType="Integer" resultMap="BaseResultMap">
+        select * from  forum_comment where iscomment=#{commentid}
+    </select>
+    <select id="selectByCid"  parameterType="Integer" resultMap="BaseResultMap">
+        select * from  forum_comment where commentid=#{commentid}
+    </select>
+    <select id="selectAll"  resultMap="BaseResultMap">
+        select * from forum_comment
+    </select>
+
+</mapper>

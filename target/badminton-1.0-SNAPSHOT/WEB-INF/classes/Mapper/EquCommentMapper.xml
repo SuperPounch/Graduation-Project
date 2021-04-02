@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.EquCommentMapper">
+  <resultMap id="BaseResultMap" type="entity.EquComment">
+    <result column="commentid" jdbcType="INTEGER" property="commentid" />
+    <result column="uid" jdbcType="INTEGER" property="uid" />
+    <result column="equid" jdbcType="INTEGER" property="equid" />
+    <result column="date" jdbcType="TIMESTAMP" property="date" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+      <association property="user" column="uid" select="dao.UserDao.selectById"/>
+      <!--一对多-->
+      <collection property="reply" column="commentid" select="dao.EquCommentMapper.selectByiscomment"/>
+  </resultMap>
+
+  <insert id="insert" parameterType="entity.EquComment" useGeneratedKeys="true" keyProperty="commentid">
+        insert into equ_comment values(#{commentid},#{uid},#{equid},#{date},#{content},#{iscomment})
+    </insert>
+
+  <update id="update" parameterType="entity.EquComment">
+        update equ_comment set uid=#{uid},equid=#{equid},date=#{date},content=#{content}where commentid=#{commentid}
+    </update>
+
+  <delete id="delete" parameterType="Integer">
+        delete from equ_comment where commentid=#{commentid}
+    </delete>
+
+  <select id="selectById" parameterType="Integer" resultMap="BaseResultMap">
+        select * from equ_comment where equid=#{equid} and iscomment=0
+    </select>
+
+    <select id="selectByiscomment"  parameterType="Integer" resultMap="BaseResultMap">
+        select * from  equ_comment where iscomment=#{commentid}
+    </select>
+    <select id="selectByCid"  parameterType="Integer" resultMap="BaseResultMap">
+        select * from  equ_comment where commentid=#{commentid}
+    </select>
+    <select id="selectAll"  resultMap="BaseResultMap">
+        select * from equ_comment
+    </select>
+
+</mapper>
